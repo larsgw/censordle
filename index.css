@@ -103,6 +103,7 @@ main aside {
   display: flex;
   flex-direction: column;
   grid-area: guesses;
+  overflow-y: hidden;
 }
 
 main aside #guesses {
