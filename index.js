@@ -225,11 +225,18 @@
     if (id === undefined || id === 'undefined') {
       return
     }
+
+    for (const $token of document.querySelectorAll(`#article [data-scroll="true"]`)) {
+      if ($token.dataset.token !== id.toString()) {
+        delete $token.dataset.scroll
+      }
+    }
+
     const $tokens = [...document.querySelectorAll(`#article [data-token="${id}"]`)]
     let scrollTo = 0
     for (const $token of $tokens) {
       if ($token.dataset.scroll) {
-        $token.dataset.scroll = ''
+        delete $token.dataset.scroll
         scrollTo = $tokens.indexOf($token) + 1
       }
     }
