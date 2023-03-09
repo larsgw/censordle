@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Censordle</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="index.css">
+  </head>
+
+  <body>
+    <header>
+      <h1>Censordle</h1>
+
+      <nav>
+        <ul>
+          <li>
+            <a href="#" aria-controls="info">Info</a>
+          </li>
+          <li>
+            <a href="#" aria-controls="stats">Stats</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <article id="article"></article>
+
+      <aside>
+        <div id="guesses">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Guess</th>
+                <th>Hits</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+
+        <form id="guess">
+          <input name="word">
+          <input type="submit" value="Reveal">
+        </form>
+      </aside>
+    </main>
+
+    <dialog id="info">
+      <form method="dialog">
+        <input type="submit" value="Close">
+      </form>
+      <h1>Info</h1>
+      <p>
+        Guess the title of the Wikipedia article. Wikipedia articles are taken from the list of
+        <a href="https://en.wikipedia.org/wiki/Wikipedia:Vital_articles/Level/4">Level-4 Vital Articles</a>.
+        Based on the currently (as of writing) defunct <a href="https://www.redactle.com/">Redactle</a>.
+      </p>
+      <p>
+        The article content is licensed under the <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0 Unported</a>
+        license. The code used to extract (nearly) plain text from the Wikipedia HTML may have
+        inadvertantly modified the content. This code can be found <a href="https://github.com/larsgw/censordle">on GitHub</a>.
+      </p>
+      <p>
+        Game state and statistics of past articles are kept in cookie-like technology. However,
+        the data remains in your local browser, and is not transmitted to a server.
+      </p>
+    </dialog>
+
+    <dialog id="stats">
+      <form method="dialog">
+        <input type="submit" value="Close">
+      </form>
+      <h1>Stats</h1>
+      <div>
+        <table>
+          <thead>
+            <tr>
+              <th>Day</th>
+              <th>Article</th>
+              <th>Guesses</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </dialog>
+
+    <script src="data.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
