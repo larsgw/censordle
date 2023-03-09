@@ -278,8 +278,8 @@
     $section.innerHTML = content.text
 
     if (content.line) {
-      const $heading = document.createElement('h' + (content.toclevel + 2))
-      $heading.textContent = content.line
+      const $heading = doc.createElement('h' + (content.toclevel + 2))
+      $heading.innerHTML = content.line
       $section.prepend($heading)
     }
 
