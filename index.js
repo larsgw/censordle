@@ -138,6 +138,10 @@
   function reveal (token, fromState) {
     const cleanToken = normalizeToken(token)
     if (cleanToken.length === 0) {
+      const $previous = document.querySelector('#article [data-scroll="true"]')
+      if ($previous) {
+        scroll($previous.dataset.token)
+      }
       return
     }
 
