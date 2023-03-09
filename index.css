@@ -1,9 +1,15 @@
 body {
+  align-items: stretch;
   background: #333;
   color: #ccc;
-  display: flex;
-  flex-direction: column;
+  display: grid;
   font-family: sans-serif;
+  grid-template-areas:
+    "header header"
+    "article guesses";
+  grid-template-columns: 1fr 20em;
+  grid-template-rows: auto 1fr;
+  justify-items: stretch;
   margin: 0;
 
   position: absolute;
@@ -13,11 +19,20 @@ body {
   right: 0;
 }
 
+@media only screen and (max-width: 40em) {
+  body {
+    grid-template-areas: "header" "article" "guesses";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr 10em;
+  }
+}
+
 /* Header */
 header {
-  display: flex;
   align-items: center;
+  display: flex;
   gap: 1em;
+  grid-area: header;
   padding: 0 2em;
 }
 
@@ -48,16 +63,14 @@ header nav ul li a {
 
 /* Content */
 main {
-  display: flex;
-  flex: 1 1;
-  min-height: 0;
+  display: contents;
 }
 
 main #article {
   background-color: #000;
-  flex: 1 0 20rem;
   font-family: monospace;
   font-size: 18px;
+  grid-area: article;
   line-height: 1.5;
   overflow-y: auto;
   padding: 1em;
@@ -70,10 +83,14 @@ main #article h5 { font-size: 1.17em; } /* 0.83em */
 main #article h6 { font-size: 1.00em; } /* 0.67em */
 
 main #article span.highlight {
-  background-color: #0ff;
-  color: #000;
+  background-color: #099;
   padding: 0 0.25em;
   margin: 0 -0.25em;
+}
+
+main #article span.highlight[data-scroll="true"] {
+  background-color: #0ff;
+  color: #000;
 }
 
 /* Content - Legibility mode */
@@ -84,8 +101,8 @@ main #article span.highlight {
 /* Words */
 main aside {
   display: flex;
-  flex: 0 0 20em;
   flex-direction: column;
+  grid-area: guesses;
 }
 
 main aside #guesses {
@@ -95,6 +112,7 @@ main aside #guesses {
 
 main aside #guesses table {
   border-collapse: collapse;
+  color: #fff;
   width: 100%;
 }
 

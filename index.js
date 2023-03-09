@@ -137,6 +137,10 @@
   const guesses = new Set()
   function reveal (token, fromState) {
     const cleanToken = normalizeToken(token)
+    if (cleanToken.length === 0) {
+      return
+    }
+
     const id = tokensReverse[cleanToken]
     let matches = []
     if (cleanToken in tokensReverse) {
@@ -167,7 +171,10 @@
       const $tr = document.createElement('tr')
       $tr.dataset.token = id
       $tr.addEventListener('click', function () {
-        highlight(this.dataset.token)
+        if (!this.classList.contains('highlight')) {
+          highlight(this.dataset.token)
+        }
+        scroll(this.dataset.token)
       })
       $tr.append($td0, $td1, $td2)
       $tbody.prepend($tr)
@@ -196,10 +203,15 @@
     }
 
     highlight(id)
+    if (!fromState) scroll(id)
     save()
   }
 
   function highlight (id) {
+    if (id === undefined || id === 'undefined') {
+      return
+    }
+
     for (const $token of document.querySelectorAll('#guesses tbody tr, #article [data-token]')) {
       if ($token.dataset.token.toString() === id.toString()) {
         $token.classList.add('highlight')
@@ -207,6 +219,26 @@
         $token.classList.remove('highlight')
       }
     }
+  }
+
+  function scroll (id) {
+    if (id === undefined || id === 'undefined') {
+      return
+    }
+    const $tokens = [...document.querySelectorAll(`#article [data-token="${id}"]`)]
+    let scrollTo = 0
+    for (const $token of $tokens) {
+      if ($token.dataset.scroll) {
+        $token.dataset.scroll = ''
+        scrollTo = $tokens.indexOf($token) + 1
+      }
+    }
+
+    $tokens[scrollTo % $tokens.length].dataset.scroll = 'true'
+    $tokens[scrollTo % $tokens.length].scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+    })
   }
 
   // Load data
