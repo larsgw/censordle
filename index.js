@@ -134,7 +134,7 @@
     })
   }
 
-  const guesses = new Set([...freeTokens])
+  const guesses = new Set()
   function reveal (token, fromState) {
     const cleanToken = normalizeToken(token)
     if (cleanToken.length === 0) {
@@ -151,7 +151,7 @@
       matches = document.querySelectorAll(`#article [data-token="${id}"]`)
     }
 
-    if (!guesses.has(cleanToken)) {
+    if (!guesses.has(cleanToken) && !freeTokens.has(cleanToken)) {
       guesses.add(cleanToken)
 
       // Record guess if the article is not yet solved, and
@@ -250,6 +250,12 @@
       behavior: 'smooth',
       block: 'center'
     })
+//     setTimeout(function () {
+//       document.querySelector(`#guesses tbody tr[data-token="${id}"]`).scrollIntoView({
+//         behavior: 'smooth',
+//         block: 'center'
+//       })
+//     }, 0)
   }
 
   // Load data
