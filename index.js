@@ -304,7 +304,10 @@
     article.append($title)
 
     for (const token of tokenize(title).filter((_, i) => i % 2)) {
-      titleTokens.add(normalizeToken(token))
+      const cleanToken = normalizeToken(token)
+      if (!freeTokens.has(cleanToken)) {
+        titleTokens.add(cleanToken)
+      }
     }
 
     for (const section of [data.lead.sections[0], ...data.remaining.sections]) {
