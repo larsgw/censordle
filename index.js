@@ -7,6 +7,10 @@
 
     // ?
     'and',
+    'or',
+
+    // pronouns
+    'it',
     'where',
 
     // verbs
@@ -29,6 +33,7 @@
     'in',
     'inside',
     'of',
+    'on',
     'outside',
     'past',
     'to',
