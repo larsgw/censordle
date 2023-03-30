@@ -104,7 +104,7 @@
   ]
 
   function tokenize (text) {
-    return text.split(/((?:\p{L}|\p{Diacritic}|\d)+)/gu)
+    return text.split(/((?:\p{L}|\p{M}|\p{N})+)/gu)
   }
 
   function normalizeToken (token) {
