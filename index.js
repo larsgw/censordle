@@ -108,7 +108,7 @@
   }
 
   function normalizeToken (token) {
-    return token.replace(/[^\p{L}\p{Diacritic}\d]/gu, '').normalize('NFD').toLowerCase()
+    return token.replace(/[^\p{L}\p{M}\p{N}]/gu, '').normalize('NFD').toLowerCase()
   }
 
   const titleTokens = new Set()
