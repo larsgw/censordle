@@ -61,6 +61,13 @@ header nav ul li a {
   text-decoration: none;
 }
 
+header [aria-controls="sections"] {
+  height: 32px;
+  padding: 5px;
+  vertical-align: middle;
+  width: 32px;
+}
+
 /* Content */
 main {
   display: contents;
@@ -191,6 +198,19 @@ dialog#stats table td:not(:first-child) {
   border-left: 1px solid currentColor;
 }
 
+dialog#sections > ul {
+  margin: 0;
+  padding: 0;
+}
+dialog#sections ul {
+  list-style-type: none;
+  margin-top: 0.25em;
+}
+dialog#sections li {
+  list-style-type: none;
+  margin-bottom: 0.25em;
+}
+
 /* General */
 table th,
 table td {
@@ -199,4 +219,11 @@ table td {
 
 * {
   box-sizing: border-box;
+}
+
+main button, main input[type="button"], main input[type="submit"] {
+  background-color: #333;
+  border: 1px solid #888;
+  border-radius: 3px;
+  color: white;
 }

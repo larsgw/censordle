@@ -391,6 +391,45 @@
   }
   updateStats()
 
+  function updateSections () {
+    const content = document.querySelector('#article')
+    const $lists = [
+      null, // h1 is not used
+      document.querySelector('#sections > ul')
+    ]
+    $lists[1].replaceChildren()
+    for (const $h of content.querySelectorAll('h2, h3, h4, h5, h6')) {
+      const level = parseInt($h.tagName[1])
+      if (level <= $lists.length) {
+        const difference = $lists.length - level
+        const $last = $lists.splice(-difference, difference)
+        for (const $ul of $last) {
+          if (!$ul.hasChildNodes()) {
+            $ul.remove()
+          }
+        }
+      }
+
+      const $li = document.createElement('li')
+      const $span = document.createElement('span')
+      $span.textContent = $h.textContent
+      $span.addEventListener('click', function (event) {
+        event.preventDefault()
+        document.getElementById('sections').close()
+        $h.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        })
+      })
+      $li.append($span)
+      const $ul = document.createElement('ul')
+      $li.append($ul)
+      $lists[$lists.length - 1].append($li)
+
+      $lists.push($ul)
+    }
+  }
+
   // Event listeners
   function openDialog (event) {
     event.preventDefault()
@@ -413,5 +452,9 @@
       behavior: 'smooth',
       top: 0
     })
+  })
+  document.querySelector('[aria-controls="sections"]').addEventListener('click', function (event) {
+    updateSections()
+    openDialog.call(this, event)
   })
 })()
