@@ -74,6 +74,7 @@ main #article {
   line-height: 1.5;
   overflow-y: auto;
   padding: 1em;
+  scroll-padding-top: 2.66em;
 }
 
 main #article h2 { font-size: 2.00em; } /* 1.50em */

@@ -407,4 +407,11 @@
     $link.addEventListener('click', openDialog)
   }
   document.getElementById('guess').addEventListener('submit', submitGuess)
+  document.getElementById('scroll-to-top').addEventListener('click', function (event) {
+    event.preventDefault()
+    document.getElementById('article').childNodes[0].scrollIntoView({
+      behavior: 'smooth',
+      top: 0
+    })
+  })
 })()
