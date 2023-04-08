@@ -251,16 +251,16 @@
     }
 
     $tokens[scrollTo % $tokens.length].dataset.scroll = 'true'
-    $tokens[scrollTo % $tokens.length].scrollIntoView({
-      behavior: 'smooth',
+    document.querySelector(`#guesses tbody tr[data-token="${id}"]`).scrollIntoView({
+      behavior: 'instant',
       block: 'center'
     })
-//     setTimeout(function () {
-//       document.querySelector(`#guesses tbody tr[data-token="${id}"]`).scrollIntoView({
-//         behavior: 'smooth',
-//         block: 'center'
-//       })
-//     }, 0)
+    setTimeout(function () {
+      $tokens[scrollTo % $tokens.length].scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      })
+    }, 0)
   }
 
   // Load data
