@@ -207,7 +207,7 @@
           localData.stats[currentDay] = guesses.size
         }
         updateStats()
-        document.getElementById('stats').show()
+        document.getElementById('stats').showModal()
       }
     }
 
@@ -433,7 +433,7 @@
   // Event listeners
   function openDialog (event) {
     event.preventDefault()
-    document.getElementById(this.getAttribute('aria-controls')).show()
+    document.getElementById(this.getAttribute('aria-controls')).showModal()
   }
   function submitGuess (event) {
     event.preventDefault()
@@ -455,6 +455,5 @@
   })
   document.querySelector('[aria-controls="sections"]').addEventListener('click', function (event) {
     updateSections()
-    openDialog.call(this, event)
   })
 })()

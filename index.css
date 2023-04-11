@@ -164,6 +164,9 @@ dialog {
   max-width: 800px;
   min-width: 50%;
 }
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
 dialog form {
   float: right;
 }
@@ -200,6 +203,8 @@ dialog#stats table td:not(:first-child) {
 
 dialog#sections > ul {
   margin: 0;
+  max-height: 50vh;
+  overflow-y: auto;
   padding: 0;
 }
 dialog#sections ul {
