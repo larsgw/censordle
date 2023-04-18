@@ -106,6 +106,18 @@ main #article span.highlight[data-scroll="true"] {
   letter-spacing: 0.1em;
 } */
 
+main #article table {
+  border-collapse: collapse;
+}
+
+main #article th {
+  background-color: #333;
+}
+
+main #article th, main #article td {
+  border: 1px solid currentColor;
+}
+
 /* Words */
 main aside {
   display: flex;

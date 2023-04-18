@@ -266,12 +266,20 @@
   // Load data
   function cleanHtml (element) {
     const children = []
+    for (const attribute of element.attributes) {
+      element.removeAttribute(attribute.name)
+    }
     for (const child of element.childNodes) {
       if (child instanceof Element) {
         if (child.matches('i, p, ul, ol, li, h2, h3, h4, h5, h6')) {
           cleanHtml(child)
           children.push(child)
-        } else if (!child.matches(excludedContent)) {
+        } else if (child.matches(excludedContent)) {
+          continue
+        } else if (child.matches('table, tr, th, td')) {
+          cleanHtml(child)
+          children.push(child)
+        } else {
           cleanHtml(child)
           children.push(...child.childNodes)
         }
