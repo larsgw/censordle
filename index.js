@@ -266,8 +266,8 @@
   // Load data
   function cleanHtml (element) {
     const children = []
-    for (const attribute of element.attributes) {
-      element.removeAttribute(attribute.name)
+    while (element.attributes.length > 0) {
+      element.removeAttribute(element.attributes[0].name)
     }
     for (const child of element.childNodes) {
       if (child instanceof Element) {
