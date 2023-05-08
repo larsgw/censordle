@@ -271,7 +271,7 @@
     }
     for (const child of element.childNodes) {
       if (child instanceof Element) {
-        if (child.matches('i, p, ul, ol, li, h2, h3, h4, h5, h6')) {
+        if (child.matches('i, br, p, ul, ol, li, h2, h3, h4, h5, h6')) {
           cleanHtml(child)
           children.push(child)
         } else if (child.matches(excludedContent)) {
