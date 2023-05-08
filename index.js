@@ -265,10 +265,13 @@
 
   // Load data
   function cleanHtml (element) {
-    const children = []
-    while (element.attributes.length > 0) {
-      element.removeAttribute(element.attributes[0].name)
+    const attributes = Array.from(element.attributes).map(attribute => attribute.name)
+    for (const attribute of attributes) {
+      if (!['rowspan', 'colspan'].includes(attribute)) {
+        element.removeAttribute(attribute)
+      }
     }
+    const children = []
     for (const child of element.childNodes) {
       if (child instanceof Element) {
         if (child.matches('i, br, p, ul, ol, li, h2, h3, h4, h5, h6')) {
