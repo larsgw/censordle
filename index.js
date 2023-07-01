@@ -132,6 +132,7 @@
         const $span = document.createElement('span')
         $span.dataset.token = id
         $span.textContent = '█'.repeat([...fragment].length)
+        $span.classList.add('censor')
         return $span
       } else {
         return fragment

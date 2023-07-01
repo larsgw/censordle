@@ -244,3 +244,7 @@ main button, main input[type="button"], main input[type="submit"] {
   border-radius: 3px;
   color: white;
 }
+
+.censor {
+  letter-spacing: 1px;
+}
