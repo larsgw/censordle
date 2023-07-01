@@ -1,7 +1,20 @@
+:root {
+  --background-muted: #333;
+  --background: #000;
+
+  --foreground-muted: #ccc;
+  --foreground: #fff;
+
+  --highlight-muted: #099;
+  --highlight: #0ff;
+
+  --border: #888;
+}
+
 body {
   align-items: stretch;
-  background: #333;
-  color: #ccc;
+  background: var(--background-muted);
+  color: var(--foreground-muted);
   display: grid;
   font-family: sans-serif;
   grid-template-areas:
@@ -74,7 +87,7 @@ main {
 }
 
 main #article {
-  background-color: #000;
+  background-color: var(--background);
   font-family: monospace;
   font-size: 18px;
   grid-area: article;
@@ -91,14 +104,14 @@ main #article h5 { font-size: 1.17em; } /* 0.83em */
 main #article h6 { font-size: 1.00em; } /* 0.67em */
 
 main #article span.highlight {
-  background-color: #099;
+  background-color: var(--highlight-muted);
   padding: 0 0.25em;
   margin: 0 -0.25em;
 }
 
 main #article span.highlight[data-scroll="true"] {
-  background-color: #0ff;
-  color: #000;
+  background-color: var(--highlight);
+  color: var(--background);
 }
 
 /* Content - Legibility mode */
@@ -111,7 +124,7 @@ main #article table {
 }
 
 main #article th {
-  background-color: #333;
+  background-color: var(--background-muted);
 }
 
 main #article th, main #article td {
@@ -133,7 +146,7 @@ main aside #guesses {
 
 main aside #guesses table {
   border-collapse: collapse;
-  color: #fff;
+  color: var(--foreground);
   width: 100%;
 }
 
@@ -147,8 +160,8 @@ main aside #guesses table tbody tr {
 }
 
 main aside #guesses table tbody tr.highlight {
-  background-color: #fff;
-  color: #000;
+  background-color: var(--foreground);
+  color: var(--background);
 }
 
 main aside #guesses table th:nth-child(2) {
@@ -193,7 +206,6 @@ dialog#stats table {
   width: 100%;
 }
 dialog#stats table th {
-  background-color: #fff;
   border-bottom: 3px solid currentColor;
   position: sticky;
   top: 0;
@@ -239,8 +251,8 @@ table td {
 }
 
 main button, main input[type="button"], main input[type="submit"] {
-  background-color: #333;
-  border: 1px solid #888;
+  background-color: var(--background-muted);
+  color: var(--foreground);
+  border: 1px solid var(--border);
   border-radius: 3px;
-  color: white;
 }
