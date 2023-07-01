@@ -204,7 +204,7 @@
         }
         // Record win
         if (!fromState) {
-          localData.stats[currentDay] = guesses.size
+          localData.stats[playDay] = guesses.size
         }
         updateStats()
         document.getElementById('stats').showModal()
@@ -341,6 +341,12 @@
   }
   const startDay = getDay(new Date('2023-03-09'))
   const currentDay = getDay(new Date()) - startDay
+  var playDay = currentDay;
+  const url = new URL(window.location)
+
+  if(url.searchParams.get('day') !== null){
+    playDay = parseInt(url.searchParams.get('day'));
+  }
 
   const localData = (function () {
     let data = localStorage.getItem('censordle')
@@ -352,8 +358,8 @@
     } else {
       data = JSON.parse(data)
     }
-    if (data.current.day !== currentDay) {
-      data.current = { day: currentDay, guesses: [] }
+    if (data.current.day !== playDay) {
+      data.current = { day: playDay, guesses: [] }
     }
     return data
   })()
@@ -367,7 +373,7 @@
     return decodeURIComponent(atob(encoded))
   }
 
-  const currentTitle = decodeBase64(censordleTitles[currentDay])
+  const currentTitle = decodeBase64(censordleTitles[playDay])
   getPage(currentTitle).then(() => {
     for (const guess of localData.current.guesses) {
       reveal(guess, true)
@@ -382,8 +388,13 @@
       $td0.textContent = day + 1
 
       const $td1 = document.createElement('td')
-      if (day === currentDay && !localData.stats[day]) {
-        $td1.textContent = '?'
+      if (!localData.stats[day]) {
+        // If it's unsolved, permit solving
+        const $a = document.createElement('a')
+        $a.setAttribute('href', `?day=${day}`)
+        $a.setAttribute('target', '_blank')
+        $a.textContent = `(Unsolved)`
+        $td1.append($a)
       } else {
         const title = decodeBase64(censordleTitles[day])
         const $a = document.createElement('a')
