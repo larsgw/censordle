@@ -1,14 +1,27 @@
 :root {
-  --background-muted: #333;
-  --background: #000;
+  --background-muted: #ccc;
+  --background: #fff;
 
-  --foreground-muted: #ccc;
-  --foreground: #fff;
+  --foreground-muted: #333;
+  --foreground: #000;
 
   --highlight-muted: #099;
-  --highlight: #0ff;
+  --highlight: #f00;
 
   --border: #888;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-muted: #333;
+    --background: #000;
+
+    --foreground-muted: #ccc;
+    --foreground: #fff;
+
+    --highlight-muted: #099;
+    --highlight: #0ff;
+  }
 }
 
 body {
