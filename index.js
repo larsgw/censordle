@@ -125,13 +125,18 @@
     return tokensReverse[cleanToken]
   }
 
+  const chars = '░▒▓█'
+  function generateCensored(fragment) {
+    return [...fragment].map(() => chars[Math.floor(Math.random() * chars.length)]).join('')
+  }
+
   function censor (text) {
     return tokenize(text).map((fragment, i) => {
       if (i % 2 && !freeTokens.has(normalizeToken(fragment))) {
         const id = registerToken(fragment)
         const $span = document.createElement('span')
         $span.dataset.token = id
-        $span.textContent = '█'.repeat([...fragment].length)
+        $span.textContent = generateCensored(fragment)
         return $span
       } else {
         return fragment
