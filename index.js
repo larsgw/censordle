@@ -181,7 +181,9 @@
       // Record guess if the article is not yet solved, and
       // we are not loading from the saved state.
       if (titleTokens.size !== 0 && !fromState) {
-        localData.current.guesses.push(cleanToken)
+        load()
+        localData.guesses[playDay].push(cleanToken)
+        save()
       }
 
       const $tbody = document.querySelector('#guesses tbody')
@@ -214,16 +216,15 @@
 
       titleTokens.delete(cleanToken)
       if (titleTokens.size === 0) {
-        const indices = {}
-        for (const $span of document.querySelectorAll('#article [data-token]')) {
-          const id = $span.dataset.token
-          indices[id] = indices[id] || 0
-          $span.textContent = tokens[id][indices[id]]
-          indices[id]++
-        }
+        revealArticle()
         // Record win
         if (!fromState) {
-          localData.stats[currentDay] = guesses.size
+          load()
+          localData.stats[playDay] = guesses.size
+          if (playDay !== currentDay) {
+            delete localData.guesses[playDay]
+          }
+          save()
         }
         updateStats()
         document.getElementById('stats').showModal()
@@ -232,7 +233,16 @@
 
     highlight(id)
     if (!fromState) scroll(id)
-    save()
+  }
+
+  function revealArticle () {
+    const indices = {}
+    for (const $span of document.querySelectorAll('#article [data-token]')) {
+      const id = $span.dataset.token
+      indices[id] = indices[id] || 0
+      $span.textContent = tokens[id][indices[id]]
+      indices[id]++
+    }
   }
 
   function highlight (id) {
@@ -360,49 +370,82 @@
   }
   const startDay = getDay(new Date('2023-03-09'))
   const currentDay = getDay(new Date()) - startDay
+  const linkDay = parseInt((new URL(window.location)).searchParams.get('day')) - 1
+  const playDay = isNaN(linkDay) ? currentDay : linkDay
 
-  const localData = (function () {
-    let data = localStorage.getItem('censordle')
-    if (data === null) {
-      data = {
-        stats: {},
-        current: {}
-      }
-    } else {
-      data = JSON.parse(data)
-    }
-    if (data.current.day !== currentDay) {
-      data.current = { day: currentDay, guesses: [] }
-    }
+  let localData
 
-    // Update data
-    if (data.settings === undefined) {
-      data.settings = {
-        theme: 'dark',
-        chars: 'default'
-      }
-    }
-
-    return data
-  })()
+  function load () {
+    const data = localStorage.getItem('censordle')
+    localData = data === null ? null : JSON.parse(data)
+  }
 
   function save () {
     localStorage.setItem('censordle', JSON.stringify(localData))
   }
-  save()
+
+  function initialize () {
+    load()
+
+    if (localData === null) {
+      localData = {
+        stats: {},
+        guesses: {},
+        settings: {
+          theme: 'dark',
+          chars: 'default'
+        }
+      }
+    }
+
+    if (localData.guesses === undefined) {
+      localData.guesses = {}
+    }
+
+    if (localData.guesses[playDay] === undefined && !localData.stats[playDay]) {
+      localData.guesses[playDay] = []
+    }
+
+    // Upgrade data format
+    if (localData.current) {
+      localData.guesses[localData.current.day] = localData.current.guesses
+      delete localData.current
+    }
+
+    if (localData.settings === undefined) {
+      localData.settings = {}
+    }
+
+    if (localData.settings.theme === undefined) {
+      localData.settings.theme = 'dark'
+    }
+
+    if (localData.settings.chars === undefined) {
+      localData.settings.chars = 'default'
+    }
+
+    save()
+  }
+  initialize()
 
   function decodeBase64 (encoded) {
     return decodeURIComponent(atob(encoded))
   }
 
-  const currentTitle = decodeBase64(censordleTitles[currentDay])
+  const currentTitle = decodeBase64(censordleTitles[playDay])
   getPage(currentTitle).then(() => {
-    for (const guess of localData.current.guesses) {
-      reveal(guess, true)
+    if (localData.guesses[playDay]) {
+      for (const guess of localData.guesses[playDay]) {
+        reveal(guess, true)
+      }
+    } else {
+      revealArticle()
     }
   })
 
   function updateStats () {
+    load()
+
     document.querySelector('#stats tbody').replaceChildren()
     for (let day = 0; day <= currentDay; day++) {
       const $tr = document.createElement('tr')
@@ -410,8 +453,20 @@
       $td0.textContent = day + 1
 
       const $td1 = document.createElement('td')
-      if (day === currentDay && !localData.stats[day]) {
+      const $td2 = document.createElement('td')
+
+      if (!localData.stats[day]) {
         $td1.textContent = '?'
+
+        if (day === playDay) {
+          $td2.textContent = '-'
+        } else {
+          const $a = document.createElement('a')
+          $a.setAttribute('href', `?day=${day + 1}`)
+          $a.setAttribute('target', '_blank')
+          $a.textContent = 'Play'
+          $td2.append($a)
+        }
       } else {
         const title = decodeBase64(censordleTitles[day])
         const $a = document.createElement('a')
@@ -419,16 +474,14 @@
         $a.setAttribute('target', '_blank')
         $a.textContent = title
         $td1.append($a)
-      }
 
-      const $td2 = document.createElement('td')
-      $td2.textContent = localData.stats[day] || '-'
+        $td2.textContent = localData.stats[day]
+      }
 
       $tr.append($td0, $td1, $td2)
       document.querySelector('#stats tbody').prepend($tr)
     }
   }
-  updateStats()
 
   function updateSections () {
     const content = document.querySelector('#article')
@@ -474,7 +527,6 @@
     $form.theme.value = localData.settings.theme
     $form.chars.value = localData.settings.chars
   }
-  updateSettings()
 
   function applySettings () {
     const $form = document.querySelector('#settings form:not([method="dialog"])')
@@ -495,9 +547,19 @@
   applySettings()
 
   // Event listeners
+  const onOpenDialog = {
+    stats: updateStats,
+    settings: updateSettings,
+    sections: updateSections,
+  }
+
   function openDialog (event) {
     event.preventDefault()
-    document.getElementById(this.getAttribute('aria-controls')).showModal()
+    const id = this.getAttribute('aria-controls')
+    if (id in onOpenDialog) {
+      onOpenDialog[id]()
+    }
+    document.getElementById(id).showModal()
   }
   function submitGuess (event) {
     event.preventDefault()
@@ -517,13 +579,11 @@
       top: 0
     })
   })
-  document.querySelector('[aria-controls="sections"]').addEventListener('click', function (event) {
-    updateSections()
-  })
   document.querySelector('#settings form:not([method="dialog"])').addEventListener('submit', function (event) {
     event.preventDefault()
     applySettings()
 
+    load()
     localData.settings.theme = this.theme.value
     localData.settings.chars = this.chars.value
     save()

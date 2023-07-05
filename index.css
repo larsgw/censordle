@@ -9,7 +9,7 @@ body[data-theme="light"] {
   --foreground-muted: #333;
   --foreground: #000;
 
-  --highlight-muted: #900;
+  --highlight-muted: #f66;
   --highlight: #f00;
 }
 
@@ -33,7 +33,7 @@ body[data-theme="dark"] {
     --foreground-muted: #333;
     --foreground: #000;
 
-    --highlight-muted: #900;
+    --highlight-muted: #f66;
     --highlight: #f00;
   }
 }
@@ -79,6 +79,11 @@ header {
 header h1 {
   flex-grow: 1;
   font-size: 1.5rem;
+}
+
+header h1 a {
+  color: inherit;
+  text-decoration: none;
 }
 
 header nav ul {
@@ -228,6 +233,7 @@ dialog#stats table {
   width: 100%;
 }
 dialog#stats table th {
+  background-color: #fff;
   border-bottom: 3px solid currentColor;
   position: sticky;
   top: 0;
