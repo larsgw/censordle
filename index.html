@@ -17,6 +17,9 @@
             <a href="#" aria-controls="info">Info</a>
           </li>
           <li>
+            <a href="#" aria-controls="settings">Settings</a>
+          </li>
+          <li>
             <a href="#" aria-controls="stats">Stats</a>
           </li>
           <li>
@@ -71,9 +74,42 @@
         inadvertantly modified the content. This code can be found <a href="https://github.com/larsgw/censordle">on GitHub</a>.
       </p>
       <p>
-        Game state and statistics of past articles are kept in cookie-like technology. However,
+        Game state, settings, and statistics of past articles are kept in cookie-like technology. However,
         the data remains in your local browser, and is not transmitted to a server.
       </p>
+    </dialog>
+
+    <dialog id="settings">
+      <form method="dialog">
+        <input type="submit" value="Close">
+      </form>
+      <h1>Settings</h1>
+      <div>
+        <form>
+          <h2>Appearance</h2>
+
+          <p>
+            <label for="settings-theme">Theme</label>
+            <select id="settings-theme" name="theme">
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+              <option value="system">System</option>
+            </select>
+          </p>
+
+          <p>
+            <label for="settings-chars">Censored words</label>
+            <select id="settings-chars" name="chars">
+              <option value="default">Regular</option>
+              <option value="more_spacing">More spacing</option>
+              <option value="mixed_shades">Mixed shades</option>
+              <option value="random_letters">Random letters</option>
+            </select>
+          </p>
+
+          <button>Save</button>
+        </form>
+      </div>
     </dialog>
 
     <dialog id="stats">

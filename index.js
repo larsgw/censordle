@@ -103,6 +103,13 @@
     'Bibliography'
   ]
 
+  const censorChars = {
+    default: '█',
+    more_spacing: '▉',
+    mixed_shades: '░▒▓█',
+    random_letters: 'abcdefghijklmnopqrstxyz',
+  }
+
   function tokenize (text) {
     return text.split(/((?:\p{L}|\p{M}|\p{N})+)/gu)
   }
@@ -125,13 +132,25 @@
     return tokensReverse[cleanToken]
   }
 
+  function censorToken (token, style) {
+    const tokenLength = [...token].length
+    const chars = censorChars[style]
+    const charCount = chars.length
+
+    if (charCount === 1) {
+      return chars.repeat(tokenLength)
+    } else {
+      return Array(tokenLength).fill().map(() => chars[Math.floor(Math.random() * charCount)]).join('')
+    }
+  }
+
   function censor (text) {
     return tokenize(text).map((fragment, i) => {
       if (i % 2 && !freeTokens.has(normalizeToken(fragment))) {
         const id = registerToken(fragment)
         const $span = document.createElement('span')
         $span.dataset.token = id
-        $span.textContent = '█'.repeat([...fragment].length)
+        $span.textContent = censorToken(fragment, localData.settings.chars)
         return $span
       } else {
         return fragment
@@ -355,6 +374,15 @@
     if (data.current.day !== currentDay) {
       data.current = { day: currentDay, guesses: [] }
     }
+
+    // Update data
+    if (data.settings === undefined) {
+      data.settings = {
+        theme: 'dark',
+        chars: 'default'
+      }
+    }
+
     return data
   })()
 
@@ -441,6 +469,31 @@
     }
   }
 
+  function updateSettings () {
+    const $form = document.querySelector('#settings form:not([method="dialog"])')
+    $form.theme.value = localData.settings.theme
+    $form.chars.value = localData.settings.chars
+  }
+  updateSettings()
+
+  function applySettings () {
+    const $form = document.querySelector('#settings form:not([method="dialog"])')
+
+    // Apply theme
+    document.body.dataset.theme = $form.theme.value
+
+    // Apply censor chars
+    if (localData.settings.chars !== $form.chars.value) {
+      for (const $span of document.querySelectorAll('#article [data-token]')) {
+        const token = tokens[$span.dataset.token]
+        if (!guesses.has(normalizeToken(token[0]))) {
+          $span.textContent = censorToken($span.textContent, $form.chars.value)
+        }
+      }
+    }
+  }
+  applySettings()
+
   // Event listeners
   function openDialog (event) {
     event.preventDefault()
@@ -466,5 +519,13 @@
   })
   document.querySelector('[aria-controls="sections"]').addEventListener('click', function (event) {
     updateSections()
+  })
+  document.querySelector('#settings form:not([method="dialog"])').addEventListener('submit', function (event) {
+    event.preventDefault()
+    applySettings()
+
+    localData.settings.theme = this.theme.value
+    localData.settings.chars = this.chars.value
+    save()
   })
 })()
