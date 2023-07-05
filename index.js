@@ -527,6 +527,7 @@
     $form.theme.value = localData.settings.theme
     $form.chars.value = localData.settings.chars
   }
+  updateSettings()
 
   function applySettings () {
     const $form = document.querySelector('#settings form:not([method="dialog"])')
