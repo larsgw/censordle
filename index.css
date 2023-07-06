@@ -106,11 +106,21 @@ header nav ul li a {
   text-decoration: none;
 }
 
-header [aria-controls="sections"] {
+header nav ul li a svg {
   height: 32px;
   padding: 5px;
   vertical-align: middle;
   width: 32px;
+}
+
+header nav ul li a span {
+  padding: 7.5px 0;
+}
+
+@media screen and (max-width: 600px) {
+  header nav ul li a span {
+    display: none;
+  }
 }
 
 /* Content */
