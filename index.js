@@ -42,6 +42,9 @@
     'with',
   ])
   const excludedContent = [
+    // Added (PCS)
+    '.pcs-collapse-table-container',
+    '.pcs-edit-section-link-container',
     // Added
     'style',
     'script',
