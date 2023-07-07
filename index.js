@@ -93,16 +93,6 @@
     '.cs1-ws-icon'
   ].join(', ')
 
-  const excludedSections = [
-    // Original
-    'External_links',
-    'Further_reading',
-    'Notes',
-    'References',
-    // Added
-    'Bibliography'
-  ]
-
   const censorChars = {
     default: '█',
     more_spacing: '▉',
@@ -303,7 +293,13 @@
     const children = []
     for (const child of element.childNodes) {
       if (child instanceof Element) {
-        if (child.matches('i, br, p, ul, ol, li, h2, h3, h4, h5, h6')) {
+        if (child.matches('h2, h3, h4, h5, h6')) {
+          cleanHtml(child)
+          const level = parseInt(child.tagName.slice(1)) + 1
+          const $heading = document.createElement('h' + level)
+          $heading.innerHTML = child.innerHTML
+          children.push($heading)
+        } else if (child.matches('i, br, p, ul, ol, li')) {
           cleanHtml(child)
           children.push(child)
         } else if (child.matches(excludedContent)) {
@@ -322,28 +318,12 @@
     element.replaceChildren(...children)
   }
 
-  function formatSection (content) {
-    const parser = new DOMParser()
-    const doc = document.implementation.createHTMLDocument('section')
-    const $section = doc.createElement('section')
-    $section.innerHTML = content.text
-
-    if (content.line) {
-      const $heading = doc.createElement('h' + (content.toclevel + 2))
-      $heading.innerHTML = content.line
-      $section.prepend($heading)
-    }
-
-    cleanHtml($section)
-
-    return $section
-  }
-
   async function getPage (id) {
-    const request = await fetch(`https://en.wikipedia.org/api/rest_v1/page/mobile-sections/${id}`)
-    const data = await request.json()
+    const apiBase = `https://en.wikipedia.org/api/rest_v1/page`
+    const metadata = await fetch(`${apiBase}/summary/${id}`).then(request => request.json())
+    const data = await fetch(`${apiBase}/mobile-html/${id}`).then(request => request.text())
 
-    const title = data.lead.normalizedtitle.replace(/ \(.+?\)$/, '')
+    const title = metadata.titles.normalized.replace(/ \(.+?\)$/, '')
     const $title = document.createElement('h2')
     $title.append(...censor(title))
     article.append($title)
@@ -355,12 +335,18 @@
       }
     }
 
-    for (const section of [data.lead.sections[0], ...data.remaining.sections]) {
-      if (excludedSections.includes(section.anchor)) {
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(data, 'text/html')
+    const $sections = doc.querySelectorAll('#pcs > section')
+
+    for (const $section of $sections) {
+      if ($section.matches('.pcs-fold-hr ~ section')) {
         continue
       }
 
-      article.append(formatSection(section))
+      cleanHtml($section)
+
+      article.append($section)
     }
   }
 
