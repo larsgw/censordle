@@ -453,7 +453,12 @@
           const $a = document.createElement('a')
           $a.setAttribute('href', `?day=${day + 1}`)
           $a.setAttribute('target', '_blank')
-          $a.textContent = 'Play'
+          if (localData.guesses[day]) {
+            const guesses = localData.guesses[day].length
+            $a.textContent = `Continue (${guesses} ${guesses === 1 ? 'guess' : 'guesses'})`
+          } else {
+            $a.textContent = 'Play'
+          }
           $td2.append($a)
         }
       } else {
