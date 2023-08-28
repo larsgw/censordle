@@ -357,7 +357,17 @@
   function getDay (date) {
     return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / (24 * 60 * 60 * 1000)
   }
-  const startDay = getDay(new Date('2023-03-09'))
+
+  const articleLibrary = (new URL(window.location)).searchParams.get('library') || 'censordle'
+  if(articleLibrary != 'censordle'){
+    document.querySelector("header h1 a").innerText += ` (${articleLibrary})`
+  }
+
+  let censordleTitles;
+  const startDay = {
+    censordle: getDay(new Date('2023-03-09')),
+    unusual: getDay(new Date('2023-08-28'))
+  }[articleLibrary]
   const currentDay = getDay(new Date()) - startDay
   const linkDay = parseInt((new URL(window.location)).searchParams.get('day')) - 1
   const playDay = isNaN(linkDay) ? currentDay : linkDay
@@ -365,12 +375,12 @@
   let localData
 
   function load () {
-    const data = localStorage.getItem('censordle')
+    const data = localStorage.getItem(articleLibrary)
     localData = data === null ? null : JSON.parse(data)
   }
 
   function save () {
-    localStorage.setItem('censordle', JSON.stringify(localData))
+    localStorage.setItem(articleLibrary, JSON.stringify(localData))
   }
 
   function initialize () {
@@ -421,16 +431,25 @@
     return decodeURIComponent(atob(encoded))
   }
 
-  const currentTitle = decodeBase64(censordleTitles[playDay])
-  getPage(currentTitle).then(() => {
-    if (localData.guesses[playDay]) {
-      for (const guess of localData.guesses[playDay]) {
-        reveal(guess, true)
+  // Load one of the custom libraries or the default.
+  async function loadLibrary(name){
+  }
+
+  async function startGame(){
+    censordleTitles = await fetch(`library/${articleLibrary}.json`).then(request => request.json())
+
+    const currentTitle = decodeBase64(censordleTitles[playDay])
+    getPage(currentTitle).then(() => {
+      if (localData.guesses[playDay]) {
+        for (const guess of localData.guesses[playDay]) {
+          reveal(guess, true)
+        }
+      } else {
+        revealArticle()
       }
-    } else {
-      revealArticle()
-    }
-  })
+    })
+  }
+  startGame()
 
   function updateStats () {
     load()
