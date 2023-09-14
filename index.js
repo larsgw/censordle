@@ -583,4 +583,8 @@
     localData.settings.chars = this.chars.value
     save()
   })
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+  }
 })()
