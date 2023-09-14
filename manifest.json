@@ -1,6 +1,6 @@
 {
   "background_color": "#000",
-  "description": "Guess the title of the Wikipedia article",
+  "description": "Guess Wikipedia article titles based on the censored contents of their articles",
   "display": "standalone",
   "name": "Censordle",
   "scope": "/censordle/",
