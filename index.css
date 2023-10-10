@@ -277,6 +277,9 @@ dialog#sections li {
   list-style-type: none;
   margin-bottom: 0.25em;
 }
+dialog#sections span {
+  cursor: pointer;
+}
 
 /* General */
 table th,
